@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录</title>
+</head>
+<body>
+    <div class="login-box">
+        <h2 id="title">登录</h2>
+        
+        <div id="loginForm">
+            <div class="input-box">
+                <input type="text" id="username" placeholder="用户名">
+            </div>
+            
+            <div class="input-box">
+                <input type="password" id="password" placeholder="密码">
+            </div>
+            
+            <button class="btn" onclick="login()">登录</button>
+            
+            <div class="link">
+                没有账号？<a onclick="showRegister()">注册</a>
+            </div>
+        </div>
+        
+        <div id="registerForm" style="display:none;">
+            <div class="input-box">
+                <input type="text" id="regUsername" placeholder="用户名（3-12位）">
+            </div>
+            
+            <div class="input-box">
+                <input type="password" id="regPassword" placeholder="密码（6位以上）">
+            </div>
+            
+            <div class="input-box">
+                <input type="password" id="regConfirm" placeholder="确认密码">
+            </div>
+            
+            <button class="btn" onclick="register()">注册</button>
+            
+            <div class="link">
+                已有账号？<a onclick="showLogin()">登录</a>
+            </div>
+        </div>
+        
+        <div class="error" id="errorMsg"></div>
+        
+        <div class="link">
+            <a href="index.html">返回首页</a>
+        </div>
+    </div>
+</body>
+</html>
+<style>
+    /* 全局样式 */
+    body {
+        margin: 0;
+        background: #111;
+        color: white;
+    }
+    
+    /* 登录框容器样式 */
+    .login-box {
+        width: 400px;
+        margin: 100px auto;
+        padding: 20px;
+        background: #222;
+        border-radius: 5px;
+    }
+    .login-box h2 {
+        color: red;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    /* 输入框样式 */
+    .input-box {
+        margin-bottom: 15px;
+    }
+    .input-box input {
+        width: 95%;
+        padding: 10px;
+        background: #333;
+        border: 1px solid #444;
+        color: white;
+        border-radius: 3px;
+    }
+    
+    /* 按钮样式 */
+    .btn {
+        width: 100%;
+        padding: 10px;
+        background: red;
+        color: white;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+    }
+    .btn:hover {
+        background: #c00;
+    }
+    
+    /* 链接样式 */
+    .link {
+        text-align: center;
+        margin-top: 15px;
+    }
+    .link a {
+        color: red;
+        cursor: pointer;
+        text-decoration: none;
+    }
+    
+    /* 错误信息样式 */
+    .error {
+        color: red;
+        font-size: 12px;
+        text-align: center;
+        margin-top: 10px;
+        display: none;
+    }
+</style>
+
+<script>
+    // 获取DOM元素
+    var title=document.getElementById('title');// 表单标题
+    var loginForm=document.getElementById('loginForm');// 登录表单
+    var registerForm=document.getElementById('registerForm');// 注册表单
+    var error=document.getElementById('errorMsg'); // 错误信息显示区域
+
+    // 切换表单
+    function showRegister() {
+        title.textContent = '注册';// 修改标题文字为"注册"
+        loginForm.style.display = 'none';//隐藏登录表单
+        registerForm.style.display = 'block';//显示注册表单
+        error.style.display = 'none';//隐藏错误提示信息
+    }
+    function showLogin() {
+        title.textContent = '登录';
+        registerForm.style.display = 'none';
+        loginForm.style.display = 'block';
+        error.style.display = 'none';
+    }
+    
+    // 显示错误
+    function showError(msg) {
+        error.textContent = msg;
+        error.style.display = 'block';
+    }
+    
+    // 登录
+    function login() {  
+        var user=document.getElementById('username').value;
+        var pass=document.getElementById('password').value;          
+        if (!user) {
+            showError('请输入用户名');
+            return;
+        }
+        if (!pass) {
+            showError('请输入密码');
+            return;
+        }
+        if (user.length < 3 || user.length > 12) {
+            showError('用户名3-12位');
+            return;
+        }     
+        if (pass.length < 6) {
+            showError('密码至少6位');
+            return;
+        }
+        location.href = 'index.html';
+    }
+    
+    // 注册
+    function register() {
+        var regname=document.getElementById('regUsername').value;
+        var regpass=document.getElementById('regPassword').value;
+        var regcon=document.getElementById('regConfirm').value;
+        if (!regname) {
+            showError('请输入用户名');
+            return;
+        }
+        if (!regpass) {
+            showError('请输入密码');
+            return;
+        }
+        if (!regcon) {
+            showError('请确认密码');
+            return;
+        }
+        if (regname.length < 3 || regname.length > 12) {
+            showError('用户名3-12位');
+            return;
+        }
+        if (regpass.length < 6) {
+            showError('密码至少6位');
+            return;
+        }
+        if (regpass !== regcon) {
+            showError('密码不一致');
+            return;
+        }
+        location.href = 'index.html';
+    }
+</script>

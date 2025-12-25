@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>比赛详情</title>
+</head>
+<body>
+    <div class="header">
+        <h1>阿布扎比大奖赛</h1>
+        <button class="back-btn" onclick="location='index.html'">返回首页</button>
+    </div>
+    
+    <div class="content">
+        <!-- 功能1：搜索框 -->
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="搜索车手姓名..." oninput="searchDrivers()">
+        </div>
+        
+        <!-- 功能2：筛选按钮 -->
+        <div class="filter-container">
+            <button class="filter-btn" onclick="filterByPoints('all')">全部</button>
+            <button class="filter-btn" onclick="filterByPoints('10+')">积分≥10</button>
+            <button class="filter-btn" onclick="filterByPoints('1-9')">积分1-9</button>
+            <button class="filter-btn" onclick="filterByPoints('0')">无积分</button>
+        </div>
+        
+        <!-- 功能3：统计信息 -->
+        <div class="stats-container" id="statsInfo">
+            <!-- 统计数据会在这里动态显示 -->
+        </div>
+        
+        <!-- 比赛表格 -->
+        <table id="resultsTable">
+            <tr>
+                <!-- 各列设置宽度 -->
+                <th width="50">排名</th>
+                <th>车手</th>
+                <th width="100">成绩</th>
+                <th width="100">最快圈速</th>
+                <th width="50">积分</th>
+                <th width="50">起</th>
+                <th width="50">停</th>
+            </tr>
+            <!-- 表格数据行 -->
+        </table>
+        
+        <button onclick="location='index.html'" class="index">
+            返回首页
+        </button>
+    </div>
+</body>
+</html>
+
+<style>
+    /* 全局样式 */
+    body {
+        margin: 0;
+        background: #111;
+        color: white;
+    }
+    
+    /* 头部区域样式 */
+    .header {
+        background: #222;
+        padding: 15px;
+        border-bottom: 3px solid red;
+        display: flex;
+        justify-content: space-between;
+    }
+    .header h1 {
+        color: red;
+        margin: 0;
+    }
+    
+    /* 返回按钮样式 */
+    .back-btn {
+        background: #333;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        cursor: pointer;
+        border-radius: 3px;
+    }
+    .back-btn:hover {
+        background: red;
+    }
+    
+    /* 内容区域样式 */
+    .content {
+        padding: 20px;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+    
+    /* 功能1：搜索框样式 */
+    .search-container {
+        margin: 15px 0;
+    }
+    
+    .search-container input {
+        width: 98%;
+        padding: 12px;
+        background: #333;
+        border: 1px solid #444;
+        color: white;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+    
+    .search-container input:focus {
+        outline: none;
+        border-color: red;
+        box-shadow: 0 0 5px rgba(255, 0, 0, 0.3);
+    }
+    
+    /* 功能2：筛选按钮样式 */
+    .filter-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin: 15px 0;
+    }
+    
+    .filter-btn {
+        padding: 8px 16px;
+        background: #333;
+        color: white;
+        border: 1px solid #444;
+        border-radius: 3px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    
+    .filter-btn:hover {
+        background: #444;
+    }
+    
+    /* 点击后背景变红 */
+    .filter-btn.active {
+        background: red;
+        border-color: red;
+    }
+    
+    /* 功能3：统计信息样式 */
+    .stats-container {
+        background: #222;
+        padding: 15px;
+        margin: 15px 0;
+        border-radius: 5px;
+        border-left: 4px solid red;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: space-around;
+    }
+    
+    .stat-item {
+        text-align: center;
+        min-width: 100px;
+    }
+    
+    .stat-value {
+        color: red;
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    
+    .stat-label {
+        color: #aaa;
+        font-size: 14px;
+    }
+    
+    /* 表格样式 */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+    }
+    th {
+        background: red;
+        padding: 12px;
+        text-align: center;
+    }
+    td {
+        padding: 12px;
+        border-bottom: 1px solid #333;
+        text-align: center;
+    }
+    tr:hover {
+        background: #222;
+    }
+    
+    /* 排名特殊样式 */
+    .pos-1 { color: gold; font-weight: bold; }
+    .pos-2 { color: silver; font-weight: bold; }
+    .pos-3 { color: #cd7f32; font-weight: bold; }
+    .points { color: red; font-weight: bold; }
+    
+    /* 返回首页按钮样式 */
+    .index{
+        width:100%; 
+        padding:12px; 
+        margin-top:30px; 
+        background:#333; 
+        color:white; 
+        border:none; 
+        cursor:pointer;
+    }
+    
+    .index:hover {
+        background: red;
+    }
+    
+</style>
+
+<script>
+    // 比赛数据
+    var driversData = [
+        { position: 1, name: "维斯塔潘", time: "LAP 58", fastest: "1:27.625", points: 25, grid: 1, stops: 1, team: "红牛" },
+        { position: 2, name: "皮亚斯特里", time: "+12.594", fastest: "1:26.765", points: 18, grid: 3, stops: 1, team: "迈凯伦" },
+        { position: 3, name: "勒克莱尔", time: "+16.572", fastest: "1:26.818", points: 15, grid: 5, stops: 2, team: "法拉利" },
+        { position: 4, name: "诺里斯", time: "+23.279", fastest: "1:26.725", points: 12, grid: 2, stops: 2, team: "迈凯伦" },
+        { position: 5, name: "拉塞尔", time: "+48.563", fastest: "1:28.599", points: 10, grid: 4, stops: 1, team: "梅赛德斯" },
+        { position: 6, name: "阿隆索", time: "+67.562", fastest: "1:28.279", points: 8, grid: 6, stops: 1, team: "阿斯顿马丁" },
+        { position: 7, name: "奥康", time: "+69.876", fastest: "1:28.655", points: 6, grid: 8, stops: 1, team: "哈斯" },
+        { position: 8, name: "汉密尔顿", time: "+72.670", fastest: "1:28.094", points: 4, grid: 16, stops: 2, team: "法拉利" },
+        { position: 9, name: "霍肯博格", time: "+79.014", fastest: "1:27.050", points: 2, grid: 18, stops: 2, team: "索伯" },
+        { position: 10, name: "斯托尔*", time: "+79.523", fastest: "1:27.626", points: 1, grid: 15, stops: 1, team: "阿斯顿马丁" },
+        { position: 11, name: "博托莱托", time: "+81.043", fastest: "1:29.114", points: 0, grid: 7, stops: 1, team: "威廉姆斯" },
+        { position: 12, name: "贝尔曼*", time: "+81.166", fastest: "1:28.976", points: 0, grid: 11, stops: 1, team: "法拉利" },
+        { position: 13, name: "塞恩斯", time: "+82.158", fastest: "1:29.052", points: 0, grid: 12, stops: 1, team: "法拉利" },
+        { position: 14, name: "角田", time: "+83.794", fastest: "1:28.557", points: 0, grid: 10, stops: 1, team: "红牛二队" },
+        { position: 15, name: "安东内利", time: "+84.399", fastest: "1:28.029", points: 0, grid: 14, stops: 1, team: "梅赛德斯" },
+        { position: 16, name: "阿尔本", time: "+90.327", fastest: "1:28.367", points: 0, grid: 17, stops: 2, team: "威廉姆斯" },
+        { position: 17, name: "哈贾尔", time: "+1 L", fastest: "1:29.375", points: 0, grid: 9, stops: 1, team: "Alpine" },
+        { position: 18, name: "劳森", time: "+1 L", fastest: "1:28.886", points: 0, grid: 13, stops: 1, team: "红牛二队" },
+        { position: 19, name: "加斯利", time: "+1 L", fastest: "1:27.767", points: 0, grid: 19, stops: 2, team: "Alpine" },
+        { position: 20, name: "科拉平托", time: "+1 L", fastest: "1:27.710", points: 0, grid: 20, stops: 2, team: "索伯" }
+    ];
+    // 当前显示的数据（用于搜索和筛选）
+    var currentDisplayData = [...driversData]; // 使用扩展运算符创建副本，用于复制数据
+    var currentFilter = 'all';// 当前筛选状态
+    // 初始化页面
+    function initPage() {
+        renderTable();
+        updateStats();
+        setActiveFilterButton();
+    }
+
+    
+    // 渲染表格
+    function renderTable() {
+        var table = document.getElementById('resultsTable');
+        // 清空表格（保留表头）
+        while (table.rows.length > 1) {
+            table.deleteRow(1);
+        }
+        // 添加数据行
+        currentDisplayData.forEach(function(driver) {
+            var row = table.insertRow();// 插入新行
+            row.innerHTML = `
+                <td class="${getPositionClass(driver.position)}">${driver.position}</td>
+                <td>${driver.name}</td>
+                <td>${driver.time}</td>
+                <td>${driver.fastest}</td>
+                <td class="points">${driver.points}</td>
+                <td>${driver.grid}</td>
+                <td>${driver.stops}</td>
+            `;
+        });
+    }
+    // 获取1,2,3名样式类
+    function getPositionClass(position) {
+        if (position === 1) return 'pos-1';
+        if (position === 2) return 'pos-2';
+        if (position === 3) return 'pos-3';
+        return '';
+    }
+
+
+    //搜索功能
+    function searchDrivers() {
+        var searchInput = document.getElementById('searchInput');
+        var searchTerm = searchInput.value;// 获取搜索词
+        if (searchTerm === '') {
+            // 如果搜索框为空，恢复当前筛选的数据
+            applyCurrentFilter();
+        } else {
+            // 根据搜索词筛选数据
+            currentDisplayData = driversData.filter(function(driver) {
+                return driver.name.includes(searchTerm);
+            });
+        }
+        renderTable();// 重新渲染表格
+        updateStats();// 更新统计数据
+    }
+
+
+    //筛选功能
+    function filterByPoints(filterType) {
+        currentFilter = filterType;
+        // 移除所有按钮的状态
+        var filterButtons = document.querySelectorAll('.filter-btn');
+        filterButtons.forEach(function(button) {
+            button.classList.remove('active');
+        });
+        // 给当前点击的按钮添加状态
+        event.target.classList.add('active');
+        applyCurrentFilter();// 应用筛选
+        renderTable();
+        updateStats();
+    }
+    function applyCurrentFilter() {
+        switch(currentFilter) {
+            case 'all':
+                currentDisplayData = [...driversData];
+                break;
+            case '10+':
+                currentDisplayData = driversData.filter(function(driver) {
+                    return driver.points >= 10;
+                });
+                break;
+            case '1-9':
+                currentDisplayData = driversData.filter(function(driver) {
+                    return driver.points >= 1 && driver.points <= 9;
+                });
+                break;
+            case '0':
+                currentDisplayData = driversData.filter(function(driver) {
+                    return driver.points === 0;
+                });
+                break;
+        }
+    }
+    //默认全部
+    function setActiveFilterButton() {
+        var filterButtons = document.querySelectorAll('.filter-btn');
+        filterButtons.forEach(function(button) {
+            if (button.textContent === '全部') {
+                button.classList.add('active');
+            }
+        });
+    }
+
+
+    //统计功能
+    function updateStats() {
+        var statsContainer = document.getElementById('statsInfo');
+        // 计算统计数据
+        var totalDrivers = currentDisplayData.length;
+        var totalPoints = 0;
+        var avgPoints = 0;
+        var maxPoints = 0;
+        var driversWithPoints = 0;
+        // 遍历当前显示的数据
+        currentDisplayData.forEach(function(driver) {
+            totalPoints += driver.points;
+            if (driver.points > maxPoints) {
+                maxPoints = driver.points;
+            }
+            if (driver.points > 0) {
+                driversWithPoints++;
+            }
+        });
+        // 计算平均积分
+        if (totalDrivers > 0) {
+            avgPoints = (totalPoints / totalDrivers).toFixed(1);
+        }
+        // 更新统计显示
+        statsContainer.innerHTML = `
+            <div class="stat-item">
+                <div class="stat-value">${totalDrivers}</div>
+                <div class="stat-label">车手数量</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">${totalPoints}</div>
+                <div class="stat-label">总积分</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">${avgPoints}</div>
+                <div class="stat-label">平均积分</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">${maxPoints}</div>
+                <div class="stat-label">最高积分</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">${driversWithPoints}</div>
+                <div class="stat-label">有积分车手</div>
+            </div>
+        `;
+    }
+
+    // 页面加载时初始化
+    window.onload = function() {
+        initPage();
+    };
+</script>

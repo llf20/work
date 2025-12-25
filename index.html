@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>比赛首页</title>
+</head>
+<body>
+    <div class="header">
+        <h1>阿布扎比大奖赛</h1>
+        <button class="login-btn" onclick="location='login.html'">登录/注册</button>
+    </div>
+    
+    <div class="content">
+        <!-- 轮播图区域 -->
+        <div class="carousel-container">
+            <div class="carousel-slides">
+                <div class="slide active">
+                    <img src="/img/img1.jpg" alt="F1赛车">
+                </div>
+                <div class="slide">
+                    <img src="/img/img2.jpg" alt="冠军车手">
+                </div>
+                <div class="slide">
+                     <img src="/img/img3.jpg" alt="车队">
+                </div>
+                <div class="slide">
+                    <img src="/img/img4.jpg" alt="车队">
+                </div>
+            </div>
+            
+            <!-- 轮播图导航按钮 -->
+            <button class="carousel-btn prev-btn" onclick="prevSlide()">❮</button>
+            <button class="carousel-btn next-btn" onclick="nextSlide()">❯</button>
+            
+            <!-- 轮播图指示器 -->
+            <div class="carousel-indicators">
+                <span class="indicator active" onclick="goToSlide(0)"></span>
+                <span class="indicator" onclick="goToSlide(1)"></span>
+                <span class="indicator" onclick="goToSlide(2)"></span>
+                <span class="indicator" onclick="goToSlide(3)"></span>
+            </div>
+        </div>
+        
+        <h2> 前10名车手</h2>
+        
+        <table>
+            <tr>
+                <th>排名</th>
+                <th>车手</th>
+                <th>车队</th>
+                <th>积分</th>
+            </tr>
+            <tr>
+                <td class="pos-1">1</td>
+                <td>维斯塔潘</td>
+                <td>红牛</td>
+                <td class="points">25</td>
+            </tr>
+            <tr>
+                <td class="pos-2">2</td>
+                <td>皮亚斯特里</td>
+                <td>迈凯伦</td>
+                <td class="points">18</td>
+            </tr>
+            <tr>
+                <td class="pos-3">3</td>
+                <td>勒克莱尔</td>
+                <td>法拉利</td>
+                <td class="points">15</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>诺里斯</td>
+                <td>迈凯伦</td>
+                <td class="points">12</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>拉塞尔</td>
+                <td>梅赛德斯</td>
+                <td class="points">10</td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>阿隆索</td>
+                <td>阿斯顿马丁</td>
+                <td class="points">8</td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>奥康</td>
+                <td>哈斯</td>
+                <td class="points">6</td>
+            </tr>
+            <tr>
+                <td>8</td>
+                <td>汉密尔顿</td>
+                <td>法拉利</td>
+                <td class="points">4</td>
+            </tr>
+            <tr>
+                <td>9</td>
+                <td>霍肯博格</td>
+                <td>索伯</td>
+                <td class="points">2</td>
+            </tr>
+            <tr>
+                <td>10</td>
+                <td>斯托尔</td>
+                <td>阿斯顿马丁</td>
+                <td class="points">1</td>
+            </tr>
+        </table>
+        
+        <div class="info">
+            <p>赛道：亚斯码头赛道</p>
+            <p>日期：2025年12月7日</p>
+            <p>冠军：维斯塔潘（红牛车队）</p>
+        </div>
+        
+        <button onclick="location='details.html'" class="details">
+            查看完整比赛结果
+        </button>
+    </div>
+</body>
+</html>
+
+<style>
+    /* 全局样式 */
+    body {
+        margin: 0;
+        background: #111;
+        color: white;
+    }
+    
+    /* 头部样式 */
+    .header {
+        background: #222;
+        padding: 15px;
+        border-bottom: 3px solid red;
+        display: flex;
+        justify-content: space-between;
+    }
+    .header h1 {
+        color: red;
+        margin: 0;
+    }
+    
+    /* 登录按钮样式 */
+    .login-btn {
+        background: red;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        cursor: pointer; /* 鼠标指针：手形图标 */
+        border-radius: 3px;
+    }
+    .login-btn:hover {
+        background: #c00;
+    }
+    
+    /* 内容区域样式 */
+    .content {
+        padding: 20px;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    
+    /* 轮播图样式 */
+    .carousel-container {
+        position: relative;
+        width: 100%;
+        height: 350px;
+        margin: 20px 0 40px 0;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    }
+    
+    .carousel-slides {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        transition: transform 0.5s ease-in-out;
+    }
+    
+    .slide {
+        min-width: 100%;
+        height: 100%;
+        position: relative;
+    }
+    
+    .slide img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .carousel-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(0, 0, 0, 0.5);
+        color: white;
+        border: none;
+        font-size: 24px;
+        padding: 10px 15px;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+    
+    .carousel-btn:hover {
+        background: rgba(255, 0, 0, 0.7);
+    }
+    
+    .prev-btn {
+        left: 10px;
+        border-radius: 0 5px 5px 0;
+    }
+    
+    .next-btn {
+        right: 10px;
+        border-radius: 5px 0 0 5px;
+    }
+    
+    .carousel-indicators {
+        position: absolute;
+        bottom: 15px;
+        left: 0;
+        right: 0;
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+    }
+    
+    .indicator {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.5);
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+    
+    .indicator.active {
+        background: red;
+        transform: scale(1.2);
+    }
+    
+    /* 表格样式 */
+    table {
+        width: 100%;
+        border-collapse: collapse;/* 边框合并*/
+        margin-top: 30px;
+    }
+    th {
+        background: red;
+        padding: 12px;
+        text-align: left;/* 文字对齐：左对齐 */
+    }
+    td {
+        padding: 12px;
+        border-bottom: 1px solid #333;
+    }
+    tr:hover {
+        background: #222;
+    }
+    
+    /* 排名特殊样式 */
+    .pos-1 { color: gold; font-weight: bold; }
+    .pos-2 { color: silver; font-weight: bold; }
+    .pos-3 { color: #cd7f32; font-weight: bold; }
+    .points { color: red; font-weight: bold; }
+    
+    /* 信息区域样式 */
+    .info {
+        background: #222;
+        padding: 15px;
+        margin-top: 30px;
+        border-radius: 5px;
+    }
+    
+    /* 详情按钮样式 */
+    .details{
+        width:100%; 
+        padding:12px; 
+        margin-top:20px; 
+        background:red; 
+        color:white; 
+        border:none; 
+        cursor:pointer
+    }
+</style>
+
+<script>
+    // 轮播图功能
+    var currentSlide = 0;
+    //获取所有幻灯片元素，返回一个NodeList（类似数组）
+    var slides = document.querySelectorAll('.slide');
+    var indicators = document.querySelectorAll('.indicator');
+    var slidesContainer = document.querySelector('.carousel-slides');
+    var slideInterval;
+    
+    // 初始化轮播图
+    function initCarousel() {
+        updateSlidePosition();
+        startAutoSlide();
+    }
+    
+    // 更新轮播图位置
+    function updateSlidePosition() {
+        // 移动幻灯片容器：向左移动当前索引 * 100%
+        slidesContainer.style.transform = `translateX(-${currentSlide * 100}%)`;
+        
+        // 更新指示器状态
+        indicators.forEach((indicator, index) => {
+            if (index === currentSlide) {
+                indicator.classList.add('active');// 当前幻灯片对应的指示器高亮
+            } else {
+                indicator.classList.remove('active');
+            }
+        });
+    }
+    
+    // 下一张幻灯片
+    function nextSlide() {
+        currentSlide = (currentSlide + 1) % slides.length;
+        updateSlidePosition();
+        resetAutoSlide();// 用户操作后重置自动轮播计时
+    }
+    
+    // 上一张幻灯片
+    function prevSlide() {
+        currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+        updateSlidePosition();
+        resetAutoSlide();
+    }
+    
+    // 跳转到指定幻灯片
+    function goToSlide(slideIndex) {
+        currentSlide = slideIndex;// 直接跳转到指定索引 
+        updateSlidePosition();
+        resetAutoSlide();
+    }
+    
+    // 开始自动轮播
+    function startAutoSlide() {
+        slideInterval = setInterval(nextSlide, 2000);
+    }
+    
+    // 重置自动轮播
+    function resetAutoSlide() {
+        clearInterval(slideInterval);// 清除现在的时间
+        startAutoSlide();// 重新开始计时
+    }
+    
+    // 页面加载时初始化轮播图
+    window.addEventListener('DOMContentLoaded', initCarousel);
+</script>
